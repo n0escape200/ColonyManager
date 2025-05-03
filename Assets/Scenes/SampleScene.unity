@@ -406,6 +406,8 @@ MonoBehaviour:
   dirtTile: {fileID: 11400000, guid: 1baae40e820301740acdf17afe864612, type: 2}
   waterTile: {fileID: 11400000, guid: 8cf58fa02b273164289a1be3cd5f83f7, type: 2}
   ironSprite: {fileID: 4750651203034271755, guid: 04b8d65a8f99f2f4089d4779625c3a98, type: 3}
+  treeSprite: {fileID: -9100910893300145835, guid: 5eae15a0654d64d4083d4aab9e2ae4f8, type: 3}
+  copperSprite: {fileID: -7602509685915895699, guid: 38ea48e4254a3cc4c9c2468a7d62327c, type: 3}
   width: 1000
   height: 500
   fillPercent: 0.7
