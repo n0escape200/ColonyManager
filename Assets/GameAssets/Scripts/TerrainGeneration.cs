@@ -9,6 +9,8 @@ public class TerrainGeneration : MonoBehaviour
     public Tile waterTile;
 
     public Sprite ironSprite; // Sprite for iron deposits
+    public Sprite treeSprite; // Sprite for trees
+    public Sprite copperSprite; // Sprite for copper deposits
 
     public int width = 100;
     public int height = 100;
@@ -17,23 +19,17 @@ public class TerrainGeneration : MonoBehaviour
     public float noiseScale = 10f; // Controls the scale of the Perlin noise
     public int seed = 0; // Seed for consistent terrain generation
 
-    private TileType[,] tileTypes; // 2D array to store tile types
-
-    public enum TileType
-    {
-        Water = 0,
-        Dirt = 1
-    }
+    private int[,] placeable; // 2D array to store tile states (0 = empty, 1 = full, 2 = water)
 
     void Start()
     {
-        tileTypes = new TileType[width, height];
+        placeable = new int[width, height];
 
-        Random.InitState(seed); // Initialize Unity's random generator with the seed
-        float offsetX = Random.Range(0f, 10000f); // Random offset for Perlin noise X
-        float offsetY = Random.Range(0f, 10000f); // Random offset for Perlin noise Y
+        Random.InitState(seed);
+        float offsetX = Random.Range(0f, 10000f);
+        float offsetY = Random.Range(0f, 10000f);
 
-        tilemap.ClearAllTiles(); // Clear existing tiles
+        tilemap.ClearAllTiles();
         List<Vector3Int> positions = new List<Vector3Int>();
         List<Tile> tiles = new List<Tile>();
 
@@ -45,12 +41,12 @@ public class TerrainGeneration : MonoBehaviour
 
                 if (noiseValue < fillPercent)
                 {
-                    tileTypes[x, y] = TileType.Dirt; // Store Dirt in the array
+                    placeable[x, y] = 0; // Empty dirt tile
                     tiles.Add(dirtTile);
                 }
                 else
                 {
-                    tileTypes[x, y] = TileType.Water; // Store Water in the array
+                    placeable[x, y] = 2; // Water tile
                     tiles.Add(waterTile);
                 }
 
@@ -60,53 +56,111 @@ public class TerrainGeneration : MonoBehaviour
 
         tilemap.SetTiles(positions.ToArray(), tiles.ToArray());
 
-        // Place iron sprites after generating the map
+        // Place objects in order
+        PlaceTreeSprites();
         PlaceIronSprites();
+        PlaceCopperSprites();
     }
 
-    void PlaceIronSprites()
+    void PlaceTreeSprites()
     {
-        // Create an empty GameObject to hold all iron sprites
-        GameObject ironParent = new GameObject("Iron");
+        GameObject treeParent = new GameObject("Trees");
 
-        // Use a new Perlin noise map for iron placement
-        float offsetX = Random.Range(0f, 10000f); // Random offset for Perlin noise X
-        float offsetY = Random.Range(0f, 10000f); // Random offset for Perlin noise Y
-        float ironNoiseScale = noiseScale * 2f; // Increase noise scale to make patches smaller
-        float ironFillPercent = fillPercent * 0.2f; // Lower fill percent for more scarcity
+        float offsetX = Random.Range(0f, 10000f);
+        float offsetY = Random.Range(0f, 10000f);
+        float treeNoiseScale = noiseScale * 1f;
+        float treeFillPercent = fillPercent * 0.5f;
 
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                // Only place iron on dirt tiles
-                if (tileTypes[x, y] == TileType.Dirt)
+                if (placeable[x, y] == 0) // Only place on empty dirt tiles
                 {
-                    float noiseValue = Mathf.PerlinNoise((x + offsetX) / ironNoiseScale, (y + offsetY) / ironNoiseScale);
+                    float noiseValue = Mathf.PerlinNoise((x + offsetX) / treeNoiseScale, (y + offsetY) / treeNoiseScale);
 
-                    if (noiseValue < ironFillPercent)
+                    if (noiseValue < treeFillPercent)
                     {
-                        // Instantiate the iron sprite at the corresponding position
                         Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.5f, 0.5f, -1f);
-                        GameObject iron = new GameObject("IronSprite");
-                        SpriteRenderer renderer = iron.AddComponent<SpriteRenderer>();
-                        renderer.sprite = ironSprite;
-                        iron.transform.position = worldPosition;
+                        GameObject tree = new GameObject("TreeSprite");
+                        SpriteRenderer renderer = tree.AddComponent<SpriteRenderer>();
+                        renderer.sprite = treeSprite;
+                        tree.transform.position = worldPosition;
 
-                        // Attach the iron sprite to the parent "Iron" GameObject
-                        iron.transform.parent = ironParent.transform;
+                        tree.transform.parent = treeParent.transform;
+
+                        placeable[x, y] = 1; // Mark as full
                     }
                 }
             }
         }
     }
 
-    public TileType GetTileType(int x, int y)
+    void PlaceIronSprites()
     {
-        if (x >= 0 && x < width && y >= 0 && y < height)
+        GameObject ironParent = new GameObject("Iron");
+
+        float offsetX = Random.Range(0f, 10000f);
+        float offsetY = Random.Range(0f, 10000f);
+        float ironNoiseScale = noiseScale * 1f;
+        float ironFillPercent = fillPercent * 0.15f;
+
+        for (int x = 0; x < width; x++)
         {
-            return tileTypes[x, y];
+            for (int y = 0; y < height; y++)
+            {
+                if (placeable[x, y] == 0) // Only place on empty dirt tiles
+                {
+                    float noiseValue = Mathf.PerlinNoise((x + offsetX) / ironNoiseScale, (y + offsetY) / ironNoiseScale);
+
+                    if (noiseValue < ironFillPercent)
+                    {
+                        Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.5f, 0.5f, -1f);
+                        GameObject iron = new GameObject("IronSprite");
+                        SpriteRenderer renderer = iron.AddComponent<SpriteRenderer>();
+                        renderer.sprite = ironSprite;
+                        iron.transform.position = worldPosition;
+
+                        iron.transform.parent = ironParent.transform;
+
+                        placeable[x, y] = 1; // Mark as full
+                    }
+                }
+            }
         }
-        return TileType.Water; // Default to Water if the position is out of bounds
+    }
+
+    void PlaceCopperSprites()
+    {
+        GameObject copperParent = new GameObject("Copper");
+
+        float offsetX = Random.Range(0f, 10000f);
+        float offsetY = Random.Range(0f, 10000f);
+        float copperNoiseScale = noiseScale * 1f;
+        float copperFillPercent = fillPercent * 0.15f;
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (placeable[x, y] == 0) // Only place on empty dirt tiles
+                {
+                    float noiseValue = Mathf.PerlinNoise((x + offsetX) / copperNoiseScale, (y + offsetY) / copperNoiseScale);
+
+                    if (noiseValue < copperFillPercent)
+                    {
+                        Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.5f, 0.5f, -1f);
+                        GameObject copper = new GameObject("CopperSprite");
+                        SpriteRenderer renderer = copper.AddComponent<SpriteRenderer>();
+                        renderer.sprite = copperSprite;
+                        copper.transform.position = worldPosition;
+
+                        copper.transform.parent = copperParent.transform;
+
+                        placeable[x, y] = 1; // Mark as full
+                    }
+                }
+            }
+        }
     }
 }
