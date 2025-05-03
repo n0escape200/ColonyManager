@@ -3,48 +3,69 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 using Unity.Burst;
+using Unity.Entities;
+using Unity.Transforms;
+using UnityEngine.PlayerLoop;
+using static UnityEditor.PlayerSettings;
 
 
-public class PathFinding : MonoBehaviour
+public partial struct PathFinding : ISystem
 {
     //A* ALGORITM
 
     private const int MOVE_STRAIT_COST = 10;
     private const int MOVE_DIAGONAL_COST = 14;
 
-    private void Start()
+
+    public void OnUpdate(ref SystemState state)
     {
-        for(int k = 0; k < 1; k++)
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
+
+        foreach (
+        var (pathfindingParams, pathPositionBuffer, entity )
+        in SystemAPI.Query<RefRO<PathfindingParams>,
+                    DynamicBuffer<PathPosition>>()
+                    .WithEntityAccess())
         {
-            
-            float startTime = Time.realtimeSinceStartup;
+            Debug.Log("Find path");
 
-            int findPathJobCount = 1;
-            NativeArray<JobHandle> jobHandleArray = new NativeArray<JobHandle>(findPathJobCount, Allocator.TempJob);
+            var path = new NativeList<int2>(Allocator.TempJob);
 
-            for (int i = 0; i < findPathJobCount; i++)
+            FindPathJob findPathJob = new FindPathJob
             {
-                FindPathJob findPathJob = new FindPathJob
-                {
-                    startPosition = new int2(0, 0),
-                    endPosition = new int2(9, 0)
-                };
-                jobHandleArray[i] = findPathJob.Schedule();
+                startPosition = pathfindingParams.ValueRO.startPosition,
+                endPosition = pathfindingParams.ValueRO.endPosition,
+                resultPath = path
+            };
+
+            findPathJob.Run();
+
+            pathPositionBuffer.Clear();
+            for (int i = path.Length - 1; i >= 0; i--) // Reverse order: start to end
+            {
+                pathPositionBuffer.Add(new PathPosition { position = path[i] });
             }
 
-            JobHandle.CompleteAll(jobHandleArray);
-            jobHandleArray.Dispose();
+            path.Dispose();
 
-            Debug.Log("Time: " + ((Time.realtimeSinceStartup - startTime) * 1000f));
+            ecb.RemoveComponent<PathfindingParams>(entity);
         }
+        ecb.Playback(state.EntityManager);
+        ecb.Dispose();
     }
 
+
     //burst works if i modify the curent way of printing in console
-    //[BurstCompile]
+    [BurstCompile]
     private struct FindPathJob: IJob
     {
         public int2 startPosition;
         public int2 endPosition;
+        
+
+
+        public NativeList<int2> resultPath;
+
 
         public void Execute()
         {
@@ -207,7 +228,7 @@ public class PathFinding : MonoBehaviour
                 
                 foreach (int2 pathPosition in path)
                 {
-                    Debug.Log(pathPosition);
+                    resultPath.Add(pathPosition);
                 }
                 
                 path.Dispose();
@@ -224,12 +245,12 @@ public class PathFinding : MonoBehaviour
         {
             if (endNode.cameFromNodeIndex == -1)
             {
-                return new NativeList<int2>(Allocator.Temp);
+                return new NativeList<int2>(Allocator.TempJob);
             }
             else
             {
                 //found a path
-                NativeList<int2> path = new NativeList<int2>(Allocator.Temp);
+                NativeList<int2> path = new NativeList<int2>(Allocator.TempJob);
                 path.Add(new int2(endNode.x, endNode.y));
 
                 PathNode currentNode = endNode;
