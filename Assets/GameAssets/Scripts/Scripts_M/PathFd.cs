@@ -22,7 +22,7 @@ public partial struct PathFinding : ISystem
         var ecb = new EntityCommandBuffer(Allocator.Temp);
 
         foreach (
-        var (pathfindingParams, pathPositionBuffer, entity )
+        var (pathfindingParams, pathPositionBuffer, entity)
         in SystemAPI.Query<RefRO<PathfindingParams>,
                     DynamicBuffer<PathPosition>>()
                     .WithEntityAccess())
@@ -31,11 +31,29 @@ public partial struct PathFinding : ISystem
 
             var path = new NativeList<int2>(Allocator.TempJob);
 
+            //initialize walkabel map
+            var walkableMap = WalkableManager.Instance.GetWalkableMap();
+            var width = WalkableManager.Instance.GetWidth();
+            var height = WalkableManager.Instance.Getheight();
+
+            NativeArray<int> walkableMapArray = new NativeArray<int>(walkableMap.Length, Allocator.TempJob);
+            for (int i = 0; i < walkableMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < walkableMap.GetLength(1); j++)
+                {
+                    walkableMapArray[i + j * width] = walkableMap[i, j]; // Adjust based on your grid width
+                }
+            }
+
+
             FindPathJob findPathJob = new FindPathJob
             {
                 startPosition = pathfindingParams.ValueRO.startPosition,
                 endPosition = pathfindingParams.ValueRO.endPosition,
-                resultPath = path
+                resultPath = path,
+                walkableMap = walkableMapArray,
+                width = width,
+                height = height,
             };
 
             findPathJob.Run();
@@ -47,6 +65,7 @@ public partial struct PathFinding : ISystem
             }
 
             path.Dispose();
+            walkableMapArray.Dispose();
 
             ecb.RemoveComponent<PathfindingParams>(entity);
         }
@@ -55,13 +74,15 @@ public partial struct PathFinding : ISystem
     }
 
 
-    //burst works if i modify the curent way of printing in console
     [BurstCompile]
-    private struct FindPathJob: IJob
+    private struct FindPathJob : IJob
     {
         public int2 startPosition;
         public int2 endPosition;
-        
+        public NativeArray<int> walkableMap;
+
+        public int width;
+        public int height;
 
 
         public NativeList<int2> resultPath;
@@ -69,7 +90,7 @@ public partial struct PathFinding : ISystem
 
         public void Execute()
         {
-            int2 gridSize = new int2(10, 10);
+            int2 gridSize = new int2(width, height);
 
             NativeArray<PathNode> pathNodeArray = new NativeArray<PathNode>(gridSize.x * gridSize.y, Allocator.Temp);
 
@@ -86,7 +107,7 @@ public partial struct PathFinding : ISystem
                     pathNode.hCost = CalculateDistanceCost(new int2(x, y), endPosition);
                     pathNode.fCost = CalculateFCost(pathNode.gCost, pathNode.hCost);
 
-                    pathNode.isWalkable = true;
+                    pathNode.isWalkable = walkableMap[x + y * width] == 0;
                     pathNode.cameFromNodeIndex = -1;
 
                     pathNodeArray[pathNode.index] = pathNode;
@@ -94,7 +115,7 @@ public partial struct PathFinding : ISystem
             }
 
             //test walls
-            
+
             {
                 PathNode walkablePathNode = pathNodeArray[CalculateIndex(1, 0, gridSize.x)];
                 walkablePathNode.SetIsWalkable(false);
@@ -223,14 +244,14 @@ public partial struct PathFinding : ISystem
             else
             {
                 //path
-                
+
                 NativeList<int2> path = CalculatePath(pathNodeArray, endNode);
-                
+
                 foreach (int2 pathPosition in path)
                 {
                     resultPath.Add(pathPosition);
                 }
-                
+
                 path.Dispose();
             }
 
@@ -329,5 +350,5 @@ public partial struct PathFinding : ISystem
 
 
         }
-    }  
+    }
 }
