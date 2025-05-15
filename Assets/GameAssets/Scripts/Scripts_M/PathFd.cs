@@ -114,22 +114,21 @@ public partial struct PathFinding : ISystem
                 }
             }
 
-            //test walls
+            //test walls (the code is no longer useful)
+            //{
+            //    PathNode walkablePathNode = pathNodeArray[CalculateIndex(1, 0, gridSize.x)];
+            //    walkablePathNode.SetIsWalkable(false);
+            //    pathNodeArray[CalculateIndex(1, 0, gridSize.x)] = walkablePathNode;
 
-            {
-                PathNode walkablePathNode = pathNodeArray[CalculateIndex(1, 0, gridSize.x)];
-                walkablePathNode.SetIsWalkable(false);
-                pathNodeArray[CalculateIndex(1, 0, gridSize.x)] = walkablePathNode;
+            //    walkablePathNode = pathNodeArray[CalculateIndex(1, 1, gridSize.x)];
+            //    walkablePathNode.SetIsWalkable(false);
+            //    pathNodeArray[CalculateIndex(1, 1, gridSize.x)] = walkablePathNode;
 
-                walkablePathNode = pathNodeArray[CalculateIndex(1, 1, gridSize.x)];
-                walkablePathNode.SetIsWalkable(false);
-                pathNodeArray[CalculateIndex(1, 1, gridSize.x)] = walkablePathNode;
+            //    walkablePathNode = pathNodeArray[CalculateIndex(1, 2, gridSize.x)];
+            //    walkablePathNode.SetIsWalkable(false);
+            //    pathNodeArray[CalculateIndex(1, 2, gridSize.x)] = walkablePathNode;
 
-                walkablePathNode = pathNodeArray[CalculateIndex(1, 2, gridSize.x)];
-                walkablePathNode.SetIsWalkable(false);
-                pathNodeArray[CalculateIndex(1, 2, gridSize.x)] = walkablePathNode;
-
-            }
+            //}
             NativeArray<int2> neighbourOffsetArray = new NativeArray<int2>(8, Allocator.Temp);
             {
                 neighbourOffsetArray[0] = new int2(-1, 0);   //left
@@ -142,6 +141,8 @@ public partial struct PathFinding : ISystem
                 neighbourOffsetArray[7] = new int2(+1, +1);  //right up
             }
             int endNodeIndex = CalculateIndex(endPosition.x, endPosition.y, gridSize.x);
+            PathNode endNode = pathNodeArray[endNodeIndex];
+            
 
             PathNode startNode = pathNodeArray[CalculateIndex(startPosition.x, startPosition.y, gridSize.x)];
             startNode.gCost = 0;
@@ -158,7 +159,7 @@ public partial struct PathFinding : ISystem
                 int currentNodeIndex = GetLowestCostFNodeIndex(openList, pathNodeArray);
                 PathNode currentNode = pathNodeArray[currentNodeIndex];
 
-                if (currentNodeIndex == endNodeIndex)
+                if (currentNodeIndex == endNodeIndex || !endNode.isWalkable) // cheks if the endpoint is reached or if its not walkable
                 {
                     //reached destination
                     break;
@@ -235,7 +236,7 @@ public partial struct PathFinding : ISystem
                 }
             }
 
-            PathNode endNode = pathNodeArray[endNodeIndex];
+            endNode = pathNodeArray[endNodeIndex];
             if (endNode.cameFromNodeIndex == -1)
             {
                 //no pathh
