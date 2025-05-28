@@ -44,10 +44,6 @@ partial struct UnitMoverSystem : ISystem
                 pathIndex.ValueRW.pathIndex += 1;
             }
 
-
-
-
-
         }
 
     }
