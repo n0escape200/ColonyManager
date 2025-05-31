@@ -7,7 +7,11 @@ public class BuildingsManager : MonoBehaviour
         lumber,
         iron,
         stone,
-        food
+        food,
+        stockpile,
+        house,
+        townhal,
+
     }
 
     public JobType job;
