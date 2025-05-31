@@ -24,9 +24,13 @@ public class TerrainGeneration : MonoBehaviour
     public Transform highlightParent;
 
 
+
+
+
     void Start()
     {
         placeable = new int[width, height];
+        WalkableManager.Initialize(width, height);  //initializing the class
 
         Random.InitState(seed);
         float offsetX = Random.Range(0f, 10000f);
@@ -51,6 +55,7 @@ public class TerrainGeneration : MonoBehaviour
                 {
                     placeable[x, y] = 2; // Water tile
                     tiles.Add(waterTile);
+                    WalkableManager.Instance.UpdateWalkableMap(x, y, 1);    //updating the walkable grid
                 }
 
                 positions.Add(new Vector3Int(x, y, 0));
@@ -164,6 +169,7 @@ public class TerrainGeneration : MonoBehaviour
                         iron.transform.parent = ironParent.transform;
 
                         placeable[x, y] = 1; // Mark as full
+                        WalkableManager.Instance.UpdateWalkableMap(x, y, 1);    //updating the walkable grid
                     }
                 }
             }
@@ -198,6 +204,8 @@ public class TerrainGeneration : MonoBehaviour
                         copper.transform.parent = copperParent.transform;
 
                         placeable[x, y] = 1; // Mark as full
+                        WalkableManager.Instance.UpdateWalkableMap(x, y, 1);    //updating the walkable grid
+
                     }
                 }
             }
