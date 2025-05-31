@@ -74,8 +74,7 @@ public class CameraScript : MonoBehaviour
             offsetY = cellSize.height % 2 == 0 ? 0.5f : 0;
             placeableObject.transform.position = new Vector3(cellCenterWorld.x - offsetX, cellCenterWorld.y - offsetY, -2);
 
-            Vector2 first, second;
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(1))
             {
                 if (cellSize != null)
                 {
@@ -91,7 +90,7 @@ public class CameraScript : MonoBehaviour
                     int x2 = cellPos.x + (objWidth % 2 == 0 ? halfWidth - 1 : halfWidth);
                     int y2 = cellPos.y + (objHeight % 2 == 0 ? halfHeight - 1 : halfHeight);
 
-                    terrainGeneration.SetPlaceableArea(x1, y1, x2, y2, 2);
+                    terrainGeneration.SetPlaceableArea(x1, y1, x2, y2, 1);
                 }
                 placeableObject = null;
             }
