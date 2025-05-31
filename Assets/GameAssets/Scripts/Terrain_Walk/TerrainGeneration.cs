@@ -8,9 +8,9 @@ public class TerrainGeneration : MonoBehaviour
     public Tile dirtTile;
     public Tile waterTile;
 
-    public Sprite ironSprite; // Sprite for iron deposits
-    public Sprite treeSprite; // Sprite for trees
-    public Sprite copperSprite; // Sprite for copper deposits
+    public GameObject treeObj;
+    public GameObject ironObj;
+    public GameObject stoneObj;
 
     public int width = 100;
     public int height = 100;
@@ -23,9 +23,7 @@ public class TerrainGeneration : MonoBehaviour
     public GameObject highlightPrefab; // Assign a highlight tile in the Inspector
     public Transform highlightParent;
 
-
-
-
+    public Transform subScene;
 
     void Start()
     {
@@ -85,6 +83,7 @@ public class TerrainGeneration : MonoBehaviour
                 if (x >= 0 && x < width && y >= 0 && y < height)
                 {
                     placeable[x, y] = value;
+                    WalkableManager.Instance.UpdateWalkableMap(x, y, 1);    //updating the walkable grid
                 }
             }
         }
@@ -109,7 +108,9 @@ public class TerrainGeneration : MonoBehaviour
 
     void PlaceTreeSprites()
     {
+
         GameObject treeParent = new GameObject("Trees");
+        treeParent.transform.SetParent(subScene);
 
         float offsetX = Random.Range(0f, 10000f);
         float offsetY = Random.Range(0f, 10000f);
@@ -126,14 +127,8 @@ public class TerrainGeneration : MonoBehaviour
 
                     if (noiseValue < treeFillPercent)
                     {
-                        Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.5f, 0.5f, -1f);
-                        GameObject tree = new GameObject("TreeSprite");
-                        SpriteRenderer renderer = tree.AddComponent<SpriteRenderer>();
-                        renderer.sprite = treeSprite;
-                        tree.transform.position = worldPosition;
-
-                        tree.transform.parent = treeParent.transform;
-
+                        Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0, 0, -1f);
+                        Instantiate(treeObj, worldPosition, Quaternion.identity, treeParent.transform);
                         placeable[x, y] = 1; // Mark as full
                     }
                 }
@@ -144,6 +139,7 @@ public class TerrainGeneration : MonoBehaviour
     void PlaceIronSprites()
     {
         GameObject ironParent = new GameObject("Iron");
+        ironParent.transform.SetParent(subScene);
 
         float offsetX = Random.Range(0f, 10000f);
         float offsetY = Random.Range(0f, 10000f);
@@ -160,13 +156,8 @@ public class TerrainGeneration : MonoBehaviour
 
                     if (noiseValue < ironFillPercent)
                     {
-                        Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.5f, 0.5f, -1f);
-                        GameObject iron = new GameObject("IronSprite");
-                        SpriteRenderer renderer = iron.AddComponent<SpriteRenderer>();
-                        renderer.sprite = ironSprite;
-                        iron.transform.position = worldPosition;
-
-                        iron.transform.parent = ironParent.transform;
+                        Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0, 0, -1f);
+                        Instantiate(ironObj, worldPosition, Quaternion.identity, ironParent.transform);
 
                         placeable[x, y] = 1; // Mark as full
                         WalkableManager.Instance.UpdateWalkableMap(x, y, 1);    //updating the walkable grid
@@ -178,7 +169,8 @@ public class TerrainGeneration : MonoBehaviour
 
     void PlaceCopperSprites()
     {
-        GameObject copperParent = new GameObject("Copper");
+        GameObject stoneParent = new GameObject("Stone");
+        stoneParent.transform.SetParent(subScene);
 
         float offsetX = Random.Range(0f, 10000f);
         float offsetY = Random.Range(0f, 10000f);
@@ -195,17 +187,10 @@ public class TerrainGeneration : MonoBehaviour
 
                     if (noiseValue < copperFillPercent)
                     {
-                        Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.5f, 0.5f, -1f);
-                        GameObject copper = new GameObject("CopperSprite");
-                        SpriteRenderer renderer = copper.AddComponent<SpriteRenderer>();
-                        renderer.sprite = copperSprite;
-                        copper.transform.position = worldPosition;
-
-                        copper.transform.parent = copperParent.transform;
-
+                        Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0, 0, -1f);
+                        Instantiate(stoneObj, worldPosition, Quaternion.identity, stoneParent.transform);
                         placeable[x, y] = 1; // Mark as full
                         WalkableManager.Instance.UpdateWalkableMap(x, y, 1);    //updating the walkable grid
-
                     }
                 }
             }
