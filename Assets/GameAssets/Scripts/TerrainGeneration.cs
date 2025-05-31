@@ -20,6 +20,9 @@ public class TerrainGeneration : MonoBehaviour
     public int seed = 0; // Seed for consistent terrain generation
 
     private int[,] placeable; // 2D array to store tile states (0 = empty, 1 = full, 2 = water)
+    public GameObject highlightPrefab; // Assign a highlight tile in the Inspector
+    public Transform highlightParent;
+
 
     void Start()
     {
@@ -60,6 +63,43 @@ public class TerrainGeneration : MonoBehaviour
         PlaceTreeSprites();
         PlaceIronSprites();
         PlaceCopperSprites();
+        //HighlightNonZeroCells();
+    }
+
+    public void SetPlaceableArea(int x1, int y1, int x2, int y2, int value)
+    {
+        int minX = Mathf.Min(x1, x2);
+        int maxX = Mathf.Max(x1, x2);
+        int minY = Mathf.Min(y1, y2);
+        int maxY = Mathf.Max(y1, y2);
+
+        for (int x = minX; x <= maxX; x++)
+        {
+            for (int y = minY; y <= maxY; y++)
+            {
+                if (x >= 0 && x < width && y >= 0 && y < height)
+                {
+                    placeable[x, y] = value;
+                }
+            }
+        }
+        HighlightNonZeroCells();
+    }
+
+    void HighlightNonZeroCells()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (placeable[x, y] == 2)
+                {
+                    Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.5f, 0.5f, -3f);
+                    // Instantiate your highlight prefab at the cell position
+                    Instantiate(highlightPrefab, worldPosition, Quaternion.identity, highlightParent);
+                }
+            }
+        }
     }
 
     void PlaceTreeSprites()
