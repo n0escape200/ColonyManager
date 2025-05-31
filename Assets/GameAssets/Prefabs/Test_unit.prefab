@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1670038761813724700}
   - component: {fileID: 82708061525470683}
   - component: {fileID: 5602775656203994060}
+  - component: {fileID: 8526650647324931345}
   m_Layer: 0
   m_Name: Test_unit
   m_TagString: Untagged
@@ -93,6 +94,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathIndex: 0
+--- !u!114 &8526650647324931345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6295714727966572953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe927c045848f04b9ecd57685e4aa25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jobType: 0
+  jobLocation:
+    x: 0
+    y: 0
+  cloasestStorageLocation:
+    x: 0
+    y: 0
+  inventoryQuantity: 0
+  InventoryResourceType: 0
+  taskStartTime: 0
+  taskDuration: 0
+  workerStatus: 0
+  statusUpdated: 0
 --- !u!1 &7422167269320383296
 GameObject:
   m_ObjectHideFlags: 0
