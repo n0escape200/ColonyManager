@@ -10,6 +10,9 @@ public class CameraScript : MonoBehaviour
     private Camera cam; // Reference to the Camera component
     private Vector3 lastMousePosition; // To track the last mouse position for dragging
 
+    public GameObject placeableObject;
+    public TerrainGeneration terrainGeneration;
+
     void Start()
     {
         // Get the Camera component
@@ -52,6 +55,46 @@ public class CameraScript : MonoBehaviour
             Vector3 dragMovement = new Vector3(-delta.x, -delta.y, 0f) * (cam.orthographicSize / Screen.height); // Scale movement
             transform.position += dragMovement; // Move the camera
             lastMousePosition = Input.mousePosition; // Update the last mouse position
+        }
+
+        if (placeableObject != null)
+        {
+            // Get mouse position in screen coordinates
+            Vector3 mouseScreenPos = Input.mousePosition;
+            // Convert to world coordinates
+            Vector3 mouseWorldPos = cam.ScreenToWorldPoint(mouseScreenPos);
+            // Convert to cell position on the tilemap
+            Vector3Int cellPos = tilemap.WorldToCell(mouseWorldPos);
+            // Get the center of the cell in world coordinates
+            Vector3 cellCenterWorld = tilemap.GetCellCenterWorld(cellPos);
+            // Set the placeable object's position (keep its original z)
+            CellSize cellSize = placeableObject.GetComponent<CellSize>();
+            float offsetX, offsetY;
+            offsetX = cellSize.width % 2 == 0 ? 0.5f : 0;
+            offsetY = cellSize.height % 2 == 0 ? 0.5f : 0;
+            placeableObject.transform.position = new Vector3(cellCenterWorld.x - offsetX, cellCenterWorld.y - offsetY, -2);
+
+            Vector2 first, second;
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (cellSize != null)
+                {
+                    int objWidth = cellSize.width;
+                    int objHeight = cellSize.height;
+
+                    // Calculate bottom-left and top-right corners based on center cell
+                    int halfWidth = objWidth / 2;
+                    int halfHeight = objHeight / 2;
+
+                    int x1 = cellPos.x - halfWidth;
+                    int y1 = cellPos.y - halfHeight;
+                    int x2 = cellPos.x + (objWidth % 2 == 0 ? halfWidth - 1 : halfWidth);
+                    int y2 = cellPos.y + (objHeight % 2 == 0 ? halfHeight - 1 : halfHeight);
+
+                    terrainGeneration.SetPlaceableArea(x1, y1, x2, y2, 2);
+                }
+                placeableObject = null;
+            }
         }
     }
 }
