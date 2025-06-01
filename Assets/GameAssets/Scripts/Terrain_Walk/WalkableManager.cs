@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using UnityEngine;
+using Unity.Collections;
 
 //lazy singleton class
 public class WalkableManager
@@ -9,16 +10,18 @@ public class WalkableManager
     private int width, height;
 
     private int[,] walkableMap;
+    private NativeArray<int> walkableMapArray;
 
     private WalkableManager(int width, int height)
     {
         this.width = width;
         this.height = height;
         walkableMap = new int[width, height];
+        walkableMapArray = new NativeArray<int>(width * height, Allocator.Persistent);
     }
-    //initialize only oance
-    //example : WalkableManager.Initialize(width, height);
 
+    //initialize only once
+    //example : WalkableManager.Initialize(width, height);
     public static void Initialize(int width, int height)
     {
         if (_instance == null)
@@ -32,7 +35,7 @@ public class WalkableManager
         }
     }
 
-    //acces to the instance
+    //access to the instance
     //examples: WalkableManager.Instance.UpdateWalkableMap(2, 3, 1);
     //          int[,] map = WalkableManager.Instance.GetWalkableMap();
     public static WalkableManager Instance
@@ -43,7 +46,6 @@ public class WalkableManager
             {
                 Debug.LogError("WalkableManager not initialized. Call Initialize() first.");
             }
-
             return _instance;
         }
     }
@@ -62,9 +64,39 @@ public class WalkableManager
         return walkableMap;
     }
 
-    public void UpdateWalkableMap(int x, int y, int isWalkable)//isWalkable shood only be 1 for not walkabel and 0 if is walkabel
+    // Burst-compatible accessors
+    public NativeArray<int> GetWalkableMapArray()
     {
-        walkableMap[x, y] = isWalkable;
+        return walkableMapArray;
     }
 
+    public int Width => width;
+    public int Height => height;
+
+    // Update both managed and native arrays
+    public void UpdateWalkableMap(int x, int y, int isWalkable)
+    {
+        walkableMap[x, y] = isWalkable;
+        walkableMapArray[x + y * width] = isWalkable;
+    }
+
+    // Optional: update the entire map at once (for initialization)
+    public void SetWalkableMap(int[,] newMap)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                walkableMap[x, y] = newMap[x, y];
+                walkableMapArray[x + y * width] = newMap[x, y];
+            }
+        }
+    }
+
+    // Dispose NativeArray when done (call this on application quit)
+    public void Dispose()
+    {
+        if (walkableMapArray.IsCreated)
+            walkableMapArray.Dispose();
+    }
 }

@@ -36,7 +36,8 @@ public class UnitDataAuthoring : MonoBehaviour
 {
     public JobType jobType;
     public int2 jobLocation;  
-    public int2 cloasestStorageLocation;
+    public int2 closestStorageLocation;
+    public int2 closestResource; 
     public int inventoryQuantity;
     public ResourceType InventoryResourceType;
     public double taskStartTime;
@@ -55,7 +56,8 @@ public class UnitDataAuthoring : MonoBehaviour
             {
                 jobType = authoring.jobType,
                 jobLocation = authoring.jobLocation,
-                cloasestStorageLocation = authoring.cloasestStorageLocation,
+                closestStorageLocation = authoring.closestStorageLocation,
+                closestResource = authoring.closestResource,
                 inventoryQuantity = authoring.inventoryQuantity,
                 InventoryResourceType = authoring.InventoryResourceType,
                 taskStartTime = authoring.taskStartTime,
@@ -73,7 +75,8 @@ public struct UnitData : IComponentData
     //if jobType.state == JobType.NoJob then the others will be ignored
     public JobType jobType;         // 0 - no job , 1 - lumberjack, 2 - stone miner , 3 - iron miner, 4 - farmer , 5 - builder(if time allows), 6 - transporter(if time allows),7 tools crafter(if time allows makes jobs *2 more fast but you need one per 5 workers) )
     public int2 jobLocation;    // does not mater if job type = 0
-    public int2 cloasestStorageLocation;    // does not mater if job type = 0
+    public int2 closestStorageLocation;    // does not mater if job type = 0
+    public int2 closestResource;     //needed for logick
     public int inventoryQuantity;   //( 0 resources  10 max of one type)maybe if time allows 10 for food, 5 for iron because of weight
     public ResourceType InventoryResourceType;  //enum (Wood, Food,Stone, Iron)
     public double taskStartTime;            //the moment in time when the unit started working on its task

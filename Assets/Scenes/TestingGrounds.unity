@@ -3069,7 +3069,7 @@ MonoBehaviour:
   tilemap: {fileID: 1101520332}
   dirtTile: {fileID: 11400000, guid: 1baae40e820301740acdf17afe864612, type: 2}
   waterTile: {fileID: 11400000, guid: 8cf58fa02b273164289a1be3cd5f83f7, type: 2}
-  treeObj: {fileID: 260362764370025378, guid: a85390f292d11ee49a91020763bf7d5a, type: 3}
+  treeObj: {fileID: 0}
   ironObj: {fileID: 260362764370025378, guid: 00b9f23195832164db0d2b1fd58c2869, type: 3}
   stoneObj: {fileID: 260362764370025378, guid: e99321e066eda0a4484662af57a30b9d, type: 3}
   width: 1000

@@ -110,7 +110,10 @@ MonoBehaviour:
   jobLocation:
     x: 0
     y: 0
-  cloasestStorageLocation:
+  closestStorageLocation:
+    x: 0
+    y: 0
+  closestResource:
     x: 0
     y: 0
   inventoryQuantity: 0
@@ -146,8 +149,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2202545658548936846}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -195,7 +198,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: -7487632973011663596, guid: 3f3a875ba221a034f8e5f7a7ac132052, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

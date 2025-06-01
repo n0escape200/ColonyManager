@@ -1,9 +1,18 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.Entities;
+using Unity.Transforms;
+using JetBrains.Annotations;
+
+
+
 
 public class TerrainGeneration : MonoBehaviour
 {
+
+
     public Tilemap tilemap;
     public Tile dirtTile;
     public Tile waterTile;
@@ -25,8 +34,21 @@ public class TerrainGeneration : MonoBehaviour
 
     public Transform subScene;
 
+
+    private EntitiesRefrences entitiesRefrences;
     void Start()
     {
+
+        //test code!!!!!!
+        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+        if (entityManager.CreateEntityQuery(typeof(EntitiesRefrences)).CalculateEntityCount() > 0)
+        {
+            entitiesRefrences = entityManager.CreateEntityQuery(typeof(EntitiesRefrences))
+                .GetSingleton<EntitiesRefrences>();
+        }
+        //end of test code!!!
+
         placeable = new int[width, height];
         WalkableManager.Initialize(width, height);  //initializing the class
 
@@ -128,7 +150,13 @@ public class TerrainGeneration : MonoBehaviour
                     if (noiseValue < treeFillPercent)
                     {
                         Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0, 0, -1f);
-                        Instantiate(treeObj, worldPosition, Quaternion.identity, treeParent.transform);
+
+                        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+                        Entity treeEntity = entityManager.Instantiate(entitiesRefrences.TreePrefabEntity);
+                        entityManager.SetComponentData(treeEntity, LocalTransform.FromPosition(worldPosition));
+
+                        // ald way of placing resources
+                        //Instantiate(treeObj, worldPosition, Quaternion.identity, treeParent.transform);
                         placeable[x, y] = 1; // Mark as full
                     }
                 }
@@ -157,7 +185,12 @@ public class TerrainGeneration : MonoBehaviour
                     if (noiseValue < ironFillPercent)
                     {
                         Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0, 0, -1f);
-                        Instantiate(ironObj, worldPosition, Quaternion.identity, ironParent.transform);
+
+                        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+                        Entity treeEntity = entityManager.Instantiate(entitiesRefrences.IronPrefabEntity);
+                        entityManager.SetComponentData(treeEntity, LocalTransform.FromPosition(worldPosition));
+
+                        //Instantiate(ironObj, worldPosition, Quaternion.identity, ironParent.transform);
 
                         placeable[x, y] = 1; // Mark as full
                         WalkableManager.Instance.UpdateWalkableMap(x, y, 1);    //updating the walkable grid
@@ -188,7 +221,12 @@ public class TerrainGeneration : MonoBehaviour
                     if (noiseValue < copperFillPercent)
                     {
                         Vector3 worldPosition = tilemap.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0, 0, -1f);
-                        Instantiate(stoneObj, worldPosition, Quaternion.identity, stoneParent.transform);
+
+                        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+                        Entity treeEntity = entityManager.Instantiate(entitiesRefrences.StonePrefabEntity);
+                        entityManager.SetComponentData(treeEntity, LocalTransform.FromPosition(worldPosition));
+
+                        //Instantiate(stoneObj, worldPosition, Quaternion.identity, stoneParent.transform);
                         placeable[x, y] = 1; // Mark as full
                         WalkableManager.Instance.UpdateWalkableMap(x, y, 1);    //updating the walkable grid
                     }
