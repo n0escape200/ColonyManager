@@ -109,7 +109,7 @@ public class TerrainGeneration : MonoBehaviour
                 }
             }
         }
-        HighlightNonZeroCells();
+        //HighlightNonZeroCells();
     }
 
     void HighlightNonZeroCells()
