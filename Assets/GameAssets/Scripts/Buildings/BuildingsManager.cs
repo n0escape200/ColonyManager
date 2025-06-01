@@ -14,6 +14,13 @@ public class BuildingsManager : MonoBehaviour
 
     }
 
+    public int woodCost;
+    public int stoneCost;
+    public int ironCost;
+    public int foodCost;
+
+    public bool isPlaced;
+
     public JobType job;
 
 }

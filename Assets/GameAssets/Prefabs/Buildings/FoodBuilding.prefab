@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 5826765517922200952}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.518, y: 1.497, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 4.0025, y: 0.9923, z: 0}
+  m_LocalScale: {x: 0.47023484, y: 0.5363128, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -4924299300382404788, guid: 986cec1e59d9c0949961ae66dbecce36, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -101,6 +101,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d266388c2d5fd684c966893d9f0e63bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  woodCost: 50
+  stoneCost: 50
+  ironCost: 0
+  foodCost: 0
+  isPlaced: 0
   job: 3
 --- !u!114 &8368420504926916983
 MonoBehaviour:
@@ -114,5 +119,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d460771905377d14d8bc37aa50550c3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 1
-  height: 1
+  width: 2
+  height: 2

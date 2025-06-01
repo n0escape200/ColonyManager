@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8205593520492577043}
   - component: {fileID: 8368420504926916983}
   m_Layer: 0
-  m_Name: HouseBuilding
+  m_Name: Wander
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 5826765517922200952}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.509, y: 0.5021, z: 0}
-  m_LocalScale: {x: 0.17305192, y: 0.16373053, z: 1}
+  m_LocalPosition: {x: 1.996, y: -2.9987, z: 0}
+  m_LocalScale: {x: 0.2854578, y: 0.249697, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1923994175756728024, guid: 8a5934371e1e7d74e88654002a817e13, type: 3}
+  m_Sprite: {fileID: 515943560240307431, guid: 058853abffe1a0a4db90b510c3f50416, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -101,12 +101,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d266388c2d5fd684c966893d9f0e63bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  woodCost: 100
-  stoneCost: 50
-  ironCost: 0
+  woodCost: 500
+  stoneCost: 500
+  ironCost: 500
   foodCost: 0
   isPlaced: 0
-  job: 5
+  job: 6
 --- !u!114 &8368420504926916983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,5 +119,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d460771905377d14d8bc37aa50550c3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 1
-  height: 1
+  width: 10
+  height: 6
