@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a3f868d0de7e3144192e77f7005a68f0
+guid: 3f3a875ba221a034f8e5f7a7ac132052
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8412029894295584662
-    second: desert1_0
+      213: -7487632973011663596
+    second: baiat_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: desert1_0
+      name: baiat_0
       rect:
         serializedVersion: 2
-        x: 59
-        y: 49
-        width: 482
-        height: 482
+        x: 309
+        y: 549
+        width: 182
+        height: 402
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a608b864167724b80800000000000000
-      internalID: -8412029894295584662
+      spriteID: 41543237b75961890800000000000000
+      internalID: -7487632973011663596
       vertices: []
       indices: 
       edges: []
@@ -134,8 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      desert1_0: -8412029894295584662
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

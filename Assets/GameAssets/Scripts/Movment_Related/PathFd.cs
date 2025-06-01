@@ -9,6 +9,7 @@ using UnityEngine.PlayerLoop;
 using static UnityEditor.PlayerSettings;
 
 
+
 public partial struct PathFinding : ISystem
 {
     //A* ALGORITM
@@ -142,7 +143,7 @@ public partial struct PathFinding : ISystem
             }
             int endNodeIndex = CalculateIndex(endPosition.x, endPosition.y, gridSize.x);
             PathNode endNode = pathNodeArray[endNodeIndex];
-            
+
 
             PathNode startNode = pathNodeArray[CalculateIndex(startPosition.x, startPosition.y, gridSize.x)];
             startNode.gCost = 0;

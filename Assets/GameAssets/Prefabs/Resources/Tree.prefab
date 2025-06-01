@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8015c5311d608f34f9288f582b40212e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceType: 0
-  resourceAmmount: 50
+  resourceType: 1
+  resourceAmmount: 10
 --- !u!1 &8624192309466895082
 GameObject:
   m_ObjectHideFlags: 0

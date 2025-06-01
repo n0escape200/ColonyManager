@@ -1,23 +1,16 @@
 using Unity.Entities;
 using UnityEngine;
 
-public enum Resource_Type {
-    wood,
-    iron,
-    stone,
-    food
-}
-
 public class ResourceDataAuthoring : MonoBehaviour
 {
-    public Resource_Type resourceType;
+    public ResourceType resourceType;
     public int resourceAmmount;
     public class Baker : Baker<ResourceDataAuthoring>
     {
         public override void Bake(ResourceDataAuthoring authoring)
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new UnitData
+            AddComponent(entity, new ResourceData
             {
                 resourceType = authoring.resourceType,
                 resourceAmmount = authoring.resourceAmmount
@@ -26,9 +19,9 @@ public class ResourceDataAuthoring : MonoBehaviour
     }
 }
 
-public struct UnitData : IComponentData
+public struct ResourceData : IComponentData
 {
-    public Resource_Type resourceType;
+    public ResourceType resourceType;
     public int resourceAmmount;
 }
 
