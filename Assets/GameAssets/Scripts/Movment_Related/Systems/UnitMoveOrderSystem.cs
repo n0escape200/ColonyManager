@@ -2,7 +2,8 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-
+//test system
+/*
 partial struct UnitMoveOrderSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)
@@ -73,3 +74,4 @@ partial struct UnitMoveOrderSystem : ISystem
         }
     }
 }
+*/
