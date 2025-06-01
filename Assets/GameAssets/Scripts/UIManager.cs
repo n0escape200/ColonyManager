@@ -159,7 +159,7 @@ public class UIManager : MonoBehaviour
                                             break;
                                         case "townhall":
                                             {
-                                                GameObject obj = Instantiate(foodBuilding, Vector3.zero, Quaternion.identity);
+                                                GameObject obj = Instantiate(townhallBuilding, Vector3.zero, Quaternion.identity);
                                                 obj.transform.SetParent(townhallParent);
                                                 cameraComponent.placeableObject = obj;
                                             }
