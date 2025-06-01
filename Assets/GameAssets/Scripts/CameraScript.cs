@@ -12,6 +12,8 @@ public class CameraScript : MonoBehaviour
 
     public GameObject placeableObject;
     public TerrainGeneration terrainGeneration;
+    public GameManager gameManager;
+
 
     void Start()
     {
@@ -59,6 +61,8 @@ public class CameraScript : MonoBehaviour
 
         if (placeableObject != null)
         {
+            BuildingsManager buildingsManager = placeableObject.GetComponent<BuildingsManager>();
+            buildingsManager.isPlaced = false;
             // Get mouse position in screen coordinates
             Vector3 mouseScreenPos = Input.mousePosition;
             // Convert to world coordinates
@@ -74,25 +78,52 @@ public class CameraScript : MonoBehaviour
             offsetY = cellSize.height % 2 == 0 ? 0.5f : 0;
             placeableObject.transform.position = new Vector3(cellCenterWorld.x - offsetX, cellCenterWorld.y - offsetY, -2);
 
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (gameManager.totalWood - buildingsManager.woodCost >= 0 &&
+                    gameManager.totalStone - buildingsManager.stoneCost >= 0 &&
+                    gameManager.totalIron - buildingsManager.ironCost >= 0 &&
+                    gameManager.totalFood - buildingsManager.foodCost >= 0 
+                ) {
+                    if (buildingsManager.woodCost > 0)
+                    {
+                        gameManager.RemoveResource(buildingsManager.woodCost, Resource.wood);
+                    }
+                    if (buildingsManager.stoneCost > 0)
+                    {
+                        gameManager.RemoveResource(buildingsManager.stoneCost, Resource.stone);
+                    }
+                    if (buildingsManager.ironCost > 0)
+                    {
+                        gameManager.RemoveResource(buildingsManager.ironCost, Resource.iron);
+                    }
+                    if (buildingsManager.foodCost > 0)
+                    {
+                        gameManager.RemoveResource(buildingsManager.foodCost, Resource.food);
+                    }
+                    if (cellSize != null)
+                    {
+                        int objWidth = cellSize.width;
+                        int objHeight = cellSize.height;
+
+                        // Calculate bottom-left and top-right corners based on center cell
+                        int halfWidth = objWidth / 2;
+                        int halfHeight = objHeight / 2;
+
+                        int x1 = cellPos.x - halfWidth;
+                        int y1 = cellPos.y - halfHeight;
+                        int x2 = cellPos.x + (objWidth % 2 == 0 ? halfWidth - 1 : halfWidth);
+                        int y2 = cellPos.y + (objHeight % 2 == 0 ? halfHeight - 1 : halfHeight);
+
+                        terrainGeneration.SetPlaceableArea(x1, y1, x2, y2, 1);
+                    }
+                    buildingsManager.isPlaced = true;
+                    placeableObject = null;
+                }
+            }
             if (Input.GetMouseButtonDown(1))
             {
-                if (cellSize != null)
-                {
-                    int objWidth = cellSize.width;
-                    int objHeight = cellSize.height;
-
-                    // Calculate bottom-left and top-right corners based on center cell
-                    int halfWidth = objWidth / 2;
-                    int halfHeight = objHeight / 2;
-
-                    int x1 = cellPos.x - halfWidth;
-                    int y1 = cellPos.y - halfHeight;
-                    int x2 = cellPos.x + (objWidth % 2 == 0 ? halfWidth - 1 : halfWidth);
-                    int y2 = cellPos.y + (objHeight % 2 == 0 ? halfHeight - 1 : halfHeight);
-
-                    terrainGeneration.SetPlaceableArea(x1, y1, x2, y2, 1);
-                }
-                placeableObject = null;
+                Destroy(placeableObject);
             }
         }
     }

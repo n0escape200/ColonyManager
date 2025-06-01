@@ -8,15 +8,21 @@ public class UIManager : MonoBehaviour
 {
     public GameObject[] subMenus;
     int activMenu = 0;
+    public CameraScript cameraComponent;
 
     public GameObject lumberBuilding;
     public GameObject ironBuilding;
     public GameObject stoneBuilding;
     public GameObject foodBuilding;
-    public CameraScript cameraComponent;
+    public GameObject stockpileBuilding;
+    public GameObject houseBuilding;
+    public GameObject townhallBuilding;
+    public GameObject wanderBuilding;
     public Transform stockpileParent;
     public Transform productionParent;
     public Transform housingParent;
+    public Transform townhallParent;
+    public Transform wanderParent;
 
     void Update()
     {
@@ -139,22 +145,30 @@ public class UIManager : MonoBehaviour
                                             break;
                                         case "stockpile":
                                             {
-
+                                                GameObject obj = Instantiate(stockpileBuilding, Vector3.zero, Quaternion.identity);
+                                                obj.transform.SetParent(stockpileParent);
+                                                cameraComponent.placeableObject = obj;
                                             }
                                             break;
                                         case "house":
                                             {
-
+                                                GameObject obj = Instantiate(houseBuilding, Vector3.zero, Quaternion.identity);
+                                                obj.transform.SetParent(housingParent);
+                                                cameraComponent.placeableObject = obj;
                                             }
                                             break;
                                         case "townhall":
                                             {
-
+                                                GameObject obj = Instantiate(foodBuilding, Vector3.zero, Quaternion.identity);
+                                                obj.transform.SetParent(townhallParent);
+                                                cameraComponent.placeableObject = obj;
                                             }
                                             break;
                                         case "wander":
                                             {
-
+                                                GameObject obj = Instantiate(wanderBuilding, Vector3.zero, Quaternion.identity);
+                                                obj.transform.SetParent(wanderParent);
+                                                cameraComponent.placeableObject = obj;
                                             }
                                             break;
                                         default:

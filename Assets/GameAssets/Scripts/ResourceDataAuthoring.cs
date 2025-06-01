@@ -17,7 +17,7 @@ public class ResourceDataAuthoring : MonoBehaviour
         public override void Bake(ResourceDataAuthoring authoring)
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new UnitData
+            AddComponent(entity, new ResourceData
             {
                 resourceType = authoring.resourceType,
                 resourceAmmount = authoring.resourceAmmount
@@ -26,7 +26,7 @@ public class ResourceDataAuthoring : MonoBehaviour
     }
 }
 
-public struct UnitData : IComponentData
+public struct ResourceData : IComponentData
 {
     public Resource_Type resourceType;
     public int resourceAmmount;

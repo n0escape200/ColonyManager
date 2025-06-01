@@ -1,14 +1,17 @@
 using UnityEngine;
 
-public class StockpileManager : MonoBehaviour
-{
-    public enum Resource
+
+
+public enum Resource
     {
         wood,
         stone,
         iron,
         food,
     }
+    
+public class StockpileManager : MonoBehaviour
+{
 
     public bool isFull = false;
     public int capacity = 200;
@@ -17,6 +20,8 @@ public class StockpileManager : MonoBehaviour
     public int stonePile = 0;
     public int ironPile = 0;
     public int foodPile = 0;
+
+    public GameManager gameManager;
 
     public void AddResource(int ammount, Resource type)
     {
@@ -30,21 +35,25 @@ public class StockpileManager : MonoBehaviour
                     case Resource.wood:
                         {
                             woodPile += ammount;
+                            gameManager.AddResource(ammount, Resource.wood);
                         }
                         break;
                     case Resource.iron:
                         {
                             ironPile += ammount;
+                            gameManager.AddResource(ammount, Resource.iron);
                         }
                         break;
                     case Resource.stone:
                         {
                             stonePile += ammount;
+                            gameManager.AddResource(ammount, Resource.stone);
                         }
                         break;
                     case Resource.food:
                         {
                             foodPile += ammount;
+                            gameManager.AddResource(ammount, Resource.food);
                         }
                         break;
                     default:
