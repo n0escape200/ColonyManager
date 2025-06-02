@@ -39,15 +39,8 @@ partial struct UnitJobManagerSystem : ISystem
                 case JobType.NoJob:
                     //logic move a bit from time to time
                     break;
-                case JobType.Lumberjack:
-                    //logic:
-                    //go to work building
-                    //go to cloasest resource offser by one
 
-                    //work
-                    //finis job and get the resource
-                    //deliver it to the storrage
-                    //repeat
+                case JobType.Lumberjack:
                     switch (unitData.ValueRW.workerStatus)
                     {
                         case WorkerStatus.Idle:
@@ -101,7 +94,7 @@ partial struct UnitJobManagerSystem : ISystem
                             unitData.ValueRW.taskStartTime += deltaTime;
                             if (unitData.ValueRO.taskStartTime >= unitData.ValueRO.taskDuration)
                             {
-                                DecreseResourceAmount(ref state,unitData.ValueRO.closestResource,ref ecb,ResourceType.Wood);
+                                DecreseResourceAmount(ref state, unitData.ValueRO.closestResource, ref ecb, ResourceType.Wood);
                                 unitData.ValueRW.inventoryQuantity = 10;
                                 unitData.ValueRW.InventoryResourceType = ResourceType.Wood;
                                 unitData.ValueRW.statusUpdated = false;
@@ -122,26 +115,261 @@ partial struct UnitJobManagerSystem : ISystem
                             {
                                 unitData.ValueRW.inventoryQuantity = 0;
                                 unitData.ValueRW.InventoryResourceType = ResourceType.Nothing;
-                                //increment in storage
+
+                                StockpileManager stockpile = StockpileManager.Instance;
+                                if (stockpile != null)
+                                {
+                                    stockpile.AddResourcee(10, Resource.wood);
+                                }
                                 unitData.ValueRW.workerStatus = WorkerStatus.TravelingToJob;
                                 unitData.ValueRW.statusUpdated = false;
                             }
                             break;
-
                     }
-
-
-
-
                     break;
+
                 case JobType.StoneMiner:
-                    //logic
+                    switch (unitData.ValueRW.workerStatus)
+                    {
+                        case WorkerStatus.Idle:
+                            unitData.ValueRW.workerStatus = WorkerStatus.TravelingToJob;
+                            unitData.ValueRW.statusUpdated = false;
+                            break;
+
+                        case WorkerStatus.TravelingToJob:
+                            if (unitData.ValueRW.statusUpdated == false)
+                            {
+                                destination = unitData.ValueRO.jobLocation;
+                                pathIndex.ValueRW.pathIndex = 0;
+                                HandlePathfindingParams(ref ecb, state.EntityManager, entity, currentPosition, destination);
+                                unitData.ValueRW.statusUpdated = true;
+                            }
+                            //needed conversion
+
+                            if (currentPositionInINT2.Equals(unitData.ValueRO.jobLocation))
+                            {
+                                unitData.ValueRW.workerStatus = WorkerStatus.TravelingToResouce;
+                                unitData.ValueRW.statusUpdated = false;
+                            }
+                            break;
+
+                        case WorkerStatus.TravelingToResouce:
+
+                            if (unitData.ValueRW.statusUpdated == false)
+                            {
+                                ResourceType resourceTypeRequest = ResourceType.Stone; // Replace with the desired resource type
+                                unitData.ValueRW.closestResource = FindClosestResource(ref state, currentPosition, resourceTypeRequest);
+
+                                pathIndex.ValueRW.pathIndex = 0;
+                                HandlePathfindingParams(ref ecb, state.EntityManager, entity, currentPosition, unitData.ValueRW.closestResource);
+                                unitData.ValueRW.statusUpdated = true;
+                            }
+                            if (currentPositionInINT2.Equals(unitData.ValueRO.closestResource))
+                            {
+                                unitData.ValueRW.workerStatus = WorkerStatus.Working;
+                                unitData.ValueRW.statusUpdated = false;
+                            }
+                            break;
+
+
+                        case WorkerStatus.Working:
+                            if (unitData.ValueRW.statusUpdated == false)
+                            {
+                                unitData.ValueRW.taskStartTime = 0;
+                                unitData.ValueRW.statusUpdated = true;
+
+                            }
+                            unitData.ValueRW.taskStartTime += deltaTime;
+                            if (unitData.ValueRO.taskStartTime >= unitData.ValueRO.taskDuration)
+                            {
+                                DecreseResourceAmount(ref state, unitData.ValueRO.closestResource, ref ecb, ResourceType.Stone);
+                                unitData.ValueRW.inventoryQuantity = 10;
+                                unitData.ValueRW.InventoryResourceType = ResourceType.Stone;
+                                unitData.ValueRW.statusUpdated = false;
+                                unitData.ValueRW.workerStatus = WorkerStatus.TravelingToStorage;
+                            }
+                            break;
+                        case WorkerStatus.TravelingToStorage:
+                            if (unitData.ValueRW.statusUpdated == false)
+                            {
+                                destination = unitData.ValueRO.closestStorageLocation;
+                                pathIndex.ValueRW.pathIndex = 0;
+                                HandlePathfindingParams(ref ecb, state.EntityManager, entity, currentPosition, destination);
+                                unitData.ValueRW.statusUpdated = true;
+                            }
+                            //needed conversion
+
+                            if (currentPositionInINT2.Equals(unitData.ValueRO.closestStorageLocation))
+                            {
+                                unitData.ValueRW.inventoryQuantity = 0;
+                                unitData.ValueRW.InventoryResourceType = ResourceType.Nothing;
+
+                                StockpileManager stockpile = StockpileManager.Instance;
+                                if (stockpile != null)
+                                {
+                                    stockpile.AddResourcee(10, Resource.stone);
+                                }
+                                unitData.ValueRW.workerStatus = WorkerStatus.TravelingToJob;
+                                unitData.ValueRW.statusUpdated = false;
+                            }
+                            break;
+                    }
                     break;
+
                 case JobType.IronMiner:
-                    //logic
+                    switch (unitData.ValueRW.workerStatus)
+                    {
+                        case WorkerStatus.Idle:
+                            unitData.ValueRW.workerStatus = WorkerStatus.TravelingToJob;
+                            unitData.ValueRW.statusUpdated = false;
+                            break;
+
+                        case WorkerStatus.TravelingToJob:
+                            if (unitData.ValueRW.statusUpdated == false)
+                            {
+                                destination = unitData.ValueRO.jobLocation;
+                                pathIndex.ValueRW.pathIndex = 0;
+                                HandlePathfindingParams(ref ecb, state.EntityManager, entity, currentPosition, destination);
+                                unitData.ValueRW.statusUpdated = true;
+                            }
+                            //needed conversion
+
+                            if (currentPositionInINT2.Equals(unitData.ValueRO.jobLocation))
+                            {
+                                unitData.ValueRW.workerStatus = WorkerStatus.TravelingToResouce;
+                                unitData.ValueRW.statusUpdated = false;
+                            }
+                            break;
+
+                        case WorkerStatus.TravelingToResouce:
+
+                            if (unitData.ValueRW.statusUpdated == false)
+                            {
+                                ResourceType resourceTypeRequest = ResourceType.Iron; // Replace with the desired resource type
+                                unitData.ValueRW.closestResource = FindClosestResource(ref state, currentPosition, resourceTypeRequest);
+
+                                pathIndex.ValueRW.pathIndex = 0;
+                                HandlePathfindingParams(ref ecb, state.EntityManager, entity, currentPosition, unitData.ValueRW.closestResource);
+                                unitData.ValueRW.statusUpdated = true;
+                            }
+                            if (currentPositionInINT2.Equals(unitData.ValueRO.closestResource))
+                            {
+                                unitData.ValueRW.workerStatus = WorkerStatus.Working;
+                                unitData.ValueRW.statusUpdated = false;
+                            }
+                            break;
+
+
+                        case WorkerStatus.Working:
+                            if (unitData.ValueRW.statusUpdated == false)
+                            {
+                                unitData.ValueRW.taskStartTime = 0;
+                                unitData.ValueRW.statusUpdated = true;
+
+                            }
+                            unitData.ValueRW.taskStartTime += deltaTime;
+                            if (unitData.ValueRO.taskStartTime >= unitData.ValueRO.taskDuration)
+                            {
+                                DecreseResourceAmount(ref state, unitData.ValueRO.closestResource, ref ecb, ResourceType.Iron);
+                                unitData.ValueRW.inventoryQuantity = 10;
+                                unitData.ValueRW.InventoryResourceType = ResourceType.Iron;
+                                unitData.ValueRW.statusUpdated = false;
+                                unitData.ValueRW.workerStatus = WorkerStatus.TravelingToStorage;
+                            }
+                            break;
+                        case WorkerStatus.TravelingToStorage:
+                            if (unitData.ValueRW.statusUpdated == false)
+                            {
+                                destination = unitData.ValueRO.closestStorageLocation;
+                                pathIndex.ValueRW.pathIndex = 0;
+                                HandlePathfindingParams(ref ecb, state.EntityManager, entity, currentPosition, destination);
+                                unitData.ValueRW.statusUpdated = true;
+                            }
+                            //needed conversion
+
+                            if (currentPositionInINT2.Equals(unitData.ValueRO.closestStorageLocation))
+                            {
+                                unitData.ValueRW.inventoryQuantity = 0;
+                                unitData.ValueRW.InventoryResourceType = ResourceType.Nothing;
+
+                                StockpileManager stockpile = StockpileManager.Instance;
+                                if (stockpile != null)
+                                {
+                                    stockpile.AddResourcee(10, Resource.iron);
+                                }
+                                unitData.ValueRW.workerStatus = WorkerStatus.TravelingToJob;
+                                unitData.ValueRW.statusUpdated = false;
+                            }
+                            break;
+                    }
                     break;
+
                 case JobType.Farmer:
-                    //logic
+                    switch (unitData.ValueRW.workerStatus)
+                    {
+                        case WorkerStatus.Idle:
+                            unitData.ValueRW.workerStatus = WorkerStatus.TravelingToJob;
+                            unitData.ValueRW.statusUpdated = false;
+                            break;
+
+                        case WorkerStatus.TravelingToJob:
+                            if (unitData.ValueRW.statusUpdated == false)
+                            {
+                                destination = unitData.ValueRO.jobLocation;
+                                pathIndex.ValueRW.pathIndex = 0;
+                                HandlePathfindingParams(ref ecb, state.EntityManager, entity, currentPosition, destination);
+                                unitData.ValueRW.statusUpdated = true;
+                            }
+                            //needed conversion
+
+                            if (currentPositionInINT2.Equals(unitData.ValueRO.jobLocation))
+                            {
+                                unitData.ValueRW.workerStatus = WorkerStatus.Working;
+                                unitData.ValueRW.statusUpdated = false;
+                            }
+                            break;
+
+                        case WorkerStatus.Working:
+                            if (unitData.ValueRW.statusUpdated == false)
+                            {
+                                unitData.ValueRW.taskStartTime = 0;
+                                unitData.ValueRW.statusUpdated = true;
+
+                            }
+                            unitData.ValueRW.taskStartTime += deltaTime;
+                            if (unitData.ValueRO.taskStartTime >= unitData.ValueRO.taskDuration)
+                            {
+                                unitData.ValueRW.inventoryQuantity = 10;
+                                unitData.ValueRW.InventoryResourceType = ResourceType.Food;
+                                unitData.ValueRW.statusUpdated = false;
+                                unitData.ValueRW.workerStatus = WorkerStatus.TravelingToStorage;
+                            }
+                            break;
+                        case WorkerStatus.TravelingToStorage:
+                            if (unitData.ValueRW.statusUpdated == false)
+                            {
+                                destination = unitData.ValueRO.closestStorageLocation;
+                                pathIndex.ValueRW.pathIndex = 0;
+                                HandlePathfindingParams(ref ecb, state.EntityManager, entity, currentPosition, destination);
+                                unitData.ValueRW.statusUpdated = true;
+                            }
+                            //needed conversion
+
+                            if (currentPositionInINT2.Equals(unitData.ValueRO.closestStorageLocation))
+                            {
+                                unitData.ValueRW.inventoryQuantity = 0;
+                                unitData.ValueRW.InventoryResourceType = ResourceType.Nothing;
+
+                                StockpileManager stockpile = StockpileManager.Instance;
+                                if (stockpile != null)
+                                {
+                                    stockpile.AddResourcee(10, Resource.food);
+                                }
+                                unitData.ValueRW.workerStatus = WorkerStatus.TravelingToJob;
+                                unitData.ValueRW.statusUpdated = false;
+                            }
+                            break;
+                    }
                     break;
                 case JobType.Builder:
                     //No logic yet
@@ -305,7 +533,7 @@ partial struct UnitJobManagerSystem : ISystem
                     return;
                 }
             }
-                
+
 
         }
 

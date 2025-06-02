@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceType: 4
-  resourceAmmount: 50
+  resourceAmmount: 10
 --- !u!1 &8624192309466895082
 GameObject:
   m_ObjectHideFlags: 0

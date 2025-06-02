@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4731868290713917635}
   - component: {fileID: 8205593520492577043}
   - component: {fileID: 8368420504926916983}
-  - component: {fileID: 1159403380010036551}
   m_Layer: 0
   m_Name: Stockpile
   m_TagString: Untagged
@@ -122,23 +121,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 1
   height: 1
---- !u!114 &1159403380010036551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5826765517922200952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97f668b09485a314c866210c28b91702, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isFull: 0
-  capacity: 200
-  storage: 0
-  woodPile: 0
-  stonePile: 0
-  ironPile: 0
-  foodPile: 0
-  gameManager: {fileID: 0}

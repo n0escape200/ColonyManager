@@ -15,16 +15,15 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        totalWood = 700;
-        totalStone = 700;
-        totalIron = 700;
-        totalFood = 700;
+        totalWood = 200;
+        totalStone = 200;
+        totalIron = 200;
+        totalFood = 200;
     }
 
     void Update()
     {
         woodText.text = totalWood.ToString();
-        Debug.Log(totalWood.ToString());
         stoneText.text = totalStone.ToString();
         ironText.text = totalIron.ToString();
         foodText.text = totalFood.ToString();

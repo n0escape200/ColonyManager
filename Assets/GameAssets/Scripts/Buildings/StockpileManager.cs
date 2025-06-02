@@ -12,9 +12,11 @@ public enum Resource
     
 public class StockpileManager : MonoBehaviour
 {
+    public static StockpileManager Instance { get; private set; }
+
 
     public bool isFull = false;
-    public int capacity = 200;
+    public int capacity = 10000;
     public int storage = 0;
     public int woodPile = 0;
     public int stonePile = 0;
@@ -22,8 +24,28 @@ public class StockpileManager : MonoBehaviour
     public int foodPile = 0;
 
     public GameManager gameManager;
+    private void Awake()
+    {
+        // Ensure only one instance exists (singleton pattern)
+        if (Instance == null)
+        {
+            Instance = this;
+            if (gameManager == null)
+        {
+            gameManager = FindFirstObjectByType<GameManager>();
+            if (gameManager == null)
+            {
+                Debug.LogError("GameManager not found in the scene!");
+            }
+        }
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
-    public void AddResource(int ammount, Resource type)
+    public void AddResourcee(int ammount, Resource type)
     {
         if (!isFull)
         {
