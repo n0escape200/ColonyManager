@@ -425,7 +425,7 @@ partial struct UnitJobManagerSystem : ISystem
     //[BurstCompile]
     private int2 FindClosestResource(ref SystemState state, float3 unitPosition, ResourceType resourceTypeRequested)
     {
-        int2 closestPosition = new int2(-1, -1);
+        int2 closestPosition = new int2(0, 0);
         float closestDistance = float.MaxValue;
 
         int2 unitPosInt = new int2(Mathf.FloorToInt(unitPosition.x + 0.5f), Mathf.FloorToInt(unitPosition.y + 0.5f));
@@ -522,13 +522,14 @@ partial struct UnitJobManagerSystem : ISystem
             for (int i = 0; i < 4; i++)
             {
                 int2 searchResource = targetResourceLocation + directions[i];
-                if (resourcePos.Equals(searchResource))
+                if (resourcePos.Equals(searchResource) && resourceTypeRequested == resourceData.ValueRO.resourceType)
                 {
                     searchedEntity = entity;
                     resourceData.ValueRW.resourceAmmount -= 10;
                     if (resourceData.ValueRO.resourceAmmount == 0)
                     {
                         ecb.DestroyEntity(entity);
+                        WalkableManager.Instance.UpdateWalkableMap(searchResource.x, searchResource.y, 0); 
                     }
                     return;
                 }

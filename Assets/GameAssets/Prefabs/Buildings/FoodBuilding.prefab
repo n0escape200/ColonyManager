@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 5826765517922200952}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.0025, y: 0.9923, z: 0}
-  m_LocalScale: {x: 0.47023484, y: 0.5363128, z: 1}
+  m_LocalPosition: {x: 4.0082, y: 1.0321, z: 0}
+  m_LocalScale: {x: 0.042992912, y: 0.035680063, z: 0.063797906}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -4924299300382404788, guid: 986cec1e59d9c0949961ae66dbecce36, type: 3}
+  m_Sprite: {fileID: -2252724837225799236, guid: 271b5db971f98ed4dad5fd58f05dcf0e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -106,6 +106,10 @@ MonoBehaviour:
   ironCost: 0
   foodCost: 0
   isPlaced: 0
+  hasWorker: 0
+  buildingfront:
+    x: 0
+    y: 0
   job: 3
 --- !u!114 &8368420504926916983
 MonoBehaviour:

@@ -65,8 +65,11 @@ public class MenuManager : MonoBehaviour
     // Example methods for button presses
     void OnPlayButtonPressed()
     {
-        first.SetActive(false);
-        second.SetActive(true);
+        //temporary fix :)
+        SceneManager.LoadScene(mainScene.name);
+
+        //first.SetActive(false);
+        //second.SetActive(true);
     }
 
     void OnExitButtonPressed()

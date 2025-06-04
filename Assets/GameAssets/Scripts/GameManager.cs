@@ -15,10 +15,10 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        totalWood = 200;
-        totalStone = 200;
-        totalIron = 200;
-        totalFood = 200;
+        totalWood = 800;
+        totalStone = 800;
+        totalIron = 800;
+        totalFood = 800;
     }
 
     void Update()
@@ -64,85 +64,85 @@ public class GameManager : MonoBehaviour
             case Resource.wood:
                 {
                     totalWood -= ammount;
-                    foreach (GameObject building in buildings)
-                    {
-                        if (ammount > 0)
-                        {
-                            StockpileManager stockpileManager = building.GetComponent<StockpileManager>();
-                            stockpileManager.woodPile -= ammount;
-                            if (stockpileManager.woodPile < 0)
-                            {
-                                ammount += stockpileManager.woodPile;
-                            }
-                            else
-                            {
-                                ammount = 0;
-                            }
-                        }
-                    }
+                    // foreach (GameObject building in buildings)
+                    // {
+                    //     if (ammount > 0)
+                    //     {
+                    //         StockpileManager stockpileManager = building.GetComponent<StockpileManager>();
+                    //         stockpileManager.woodPile -= ammount;
+                    //         if (stockpileManager.woodPile < 0)
+                    //         {
+                    //             ammount += stockpileManager.woodPile;
+                    //         }
+                    //         else
+                    //         {
+                    //             ammount = 0;
+                    //         }
+                    //     }
+                    // }
                 }
                 break;
             case Resource.stone:
                 {
                     totalStone -= ammount;
-                    foreach (GameObject building in buildings)
-                    {
-                        if (ammount > 0)
-                        {
-                            StockpileManager stockpileManager = building.GetComponent<StockpileManager>();
-                            stockpileManager.stonePile -= ammount;
-                            if (stockpileManager.stonePile < 0)
-                            {
-                                ammount += stockpileManager.stonePile;
-                            }
-                            else
-                            {
-                                ammount = 0;
-                            }
-                        }
-                    }
+                    // foreach (GameObject building in buildings)
+                    // {
+                    //     if (ammount > 0)
+                    //     {
+                    //         StockpileManager stockpileManager = building.GetComponent<StockpileManager>();
+                    //         stockpileManager.stonePile -= ammount;
+                    //         if (stockpileManager.stonePile < 0)
+                    //         {
+                    //             ammount += stockpileManager.stonePile;
+                    //         }
+                    //         else
+                    //         {
+                    //             ammount = 0;
+                    //         }
+                    //     }
+                    // }
                 }
                 break;
             case Resource.iron:
                 {
                     totalIron -= ammount;
-                    foreach (GameObject building in buildings)
-                    {
-                        if (ammount > 0)
-                        {
-                            StockpileManager stockpileManager = building.GetComponent<StockpileManager>();
-                            stockpileManager.ironPile -= ammount;
-                            if (stockpileManager.ironPile < 0)
-                            {
-                                ammount += stockpileManager.ironPile;
-                            }
-                            else
-                            {
-                                ammount = 0;
-                            }
-                        }
-                    }
+                    // foreach (GameObject building in buildings)
+                    // {
+                    //     if (ammount > 0)
+                    //     {
+                    //         StockpileManager stockpileManager = building.GetComponent<StockpileManager>();
+                    //         stockpileManager.ironPile -= ammount;
+                    //         if (stockpileManager.ironPile < 0)
+                    //         {
+                    //             ammount += stockpileManager.ironPile;
+                    //         }
+                    //         else
+                    //         {
+                    //             ammount = 0;
+                    //         }
+                    //     }
+                    // }
                 }
                 break;
             case Resource.food:
                 {
                     totalFood -= ammount;
-                    foreach (GameObject building in buildings)
-                    {
-                        if (ammount > 0)
-                        {
-                            StockpileManager stockpileManager = building.GetComponent<StockpileManager>();
-                            stockpileManager.foodPile -= ammount;
-                            if (stockpileManager.foodPile < 0)
-                            {
-                                ammount += stockpileManager.foodPile;
-                            }
-                            else
-                            {
-                                ammount = 0;
-                            }
-                        }
-                    }
+                    // foreach (GameObject building in buildings)
+                    // {
+                    //     if (ammount > 0)
+                    //     {
+                    //         StockpileManager stockpileManager = building.GetComponent<StockpileManager>();
+                    //         stockpileManager.foodPile -= ammount;
+                    //         if (stockpileManager.foodPile < 0)
+                    //         {
+                    //             ammount += stockpileManager.foodPile;
+                    //         }
+                    //         else
+                    //         {
+                    //             ammount = 0;
+                    //         }
+                    //     }
+                    // }
                 }
                 break;
             default:
